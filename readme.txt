@@ -1,0 +1,1 @@
+Replace candicate for python nyaa api. This is setup as lambda function on aws
