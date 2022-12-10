@@ -1,0 +1,14 @@
+service: nyaa-hapi-app
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: dev
+  region: us-west-1
+functions:
+  app:
+    handler: app.handler # reference the file and exported method
+    events: # events trigger lambda functions
+      - http: 
+          path: /{proxy+}
+          method: ANY
+          cors: true
