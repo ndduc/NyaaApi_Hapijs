@@ -1,8 +1,7 @@
 'use strict';
 const {si, pantsu} = require('nyaapi')
-
 const Hapi = require('@hapi/hapi');
-
+const NyaaModel = require('./src/model/index');
 const init = async () => {
 
     const server = Hapi.server({
@@ -33,9 +32,11 @@ const init = async () => {
                     // n: 1 // number of record return from search
                 })
                 .then((data) => {
-                    return data;
+                    let nyaaLists = NyaaModel.ListNyaaModel(data);
+                    return nyaaLists;
                 })
                 .catch((err) => {
+                    console.log(err);
                     return err;
                 })
             } else {
@@ -43,8 +44,36 @@ const init = async () => {
             }
             return h.response(obj).code(200);
         }
-    }
-    );
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/nyaa/search-flex',
+        handler: async (request, h) => {
+            let obj;
+            let q = request.query.q;
+            let cat = request.query.cat;
+            if (q) {
+                obj = await si.search({
+                    term: q,        
+                    category: cat,  // category
+                    filter: 0,
+                    // n: 1 // number of record return from search
+                })
+                .then((data) => {
+                    let nyaaLists = NyaaModel.ListNyaaModel(data);
+                    return nyaaLists;
+                })
+                .catch((err) => {
+                    console.log(err);
+                    return err;
+                })
+            } else {
+                return h.response(null).code(401)
+            }
+            return h.response(obj).code(200);
+        }
+    });
 
     await server.start();
     console.log('Server running on %s', server.info.uri);

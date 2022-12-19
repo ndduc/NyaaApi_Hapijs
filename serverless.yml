@@ -12,3 +12,4 @@ functions:
           path: /{proxy+}
           method: ANY
           cors: true
+    memorySize: 1536
