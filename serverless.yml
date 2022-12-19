@@ -13,3 +13,4 @@ functions:
           method: ANY
           cors: true
     memorySize: 1536
+    provisionedConcurrency: 4
