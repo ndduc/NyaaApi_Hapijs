@@ -28,8 +28,20 @@
 //     '6_2' = 'SOFTWARE_GAMES',
 // }
 
+
+// enum SukebeiCat {
+//     '1_0' = 'Anime',
+//     '1_1' = 'Doujinshi',
+//     '1_3' = 'Games',
+//     '1_4' = 'Manga',
+//     '1_5' = 'Pictures',
+//     '2_0' = 'Photo and Pic 3D',
+//     '2_1' = 'Videos 3D'
+// }
+
 const { transformRequest, transformResponse } = require('hapi-lambda');
-const {si, pantsu} = require('nyaapi')
+const {si} = require('nyaapi')
+const {sukebei} = require('nyaapi-sukebei')
 const Hapi = require('@hapi/hapi');
 const NyaaModel = require('./src/model/index');
 const init = async () => {
@@ -45,6 +57,35 @@ const init = async () => {
         handler: (request, h) => {
 
             return 'Nyaa Api with Hapi';
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/sukebei/search-flex',
+        handler: async (request, h) => {
+            let obj;
+            let q = request.query.q;
+            let cat = request.query.cat;
+            if (q) {
+                obj = await sukebei.search({
+                    term: q,        
+                    category: cat,  // category
+                    filter: 0,
+                    // n: 1 // number of record return from search
+                })
+                .then((data) => {
+                    let nyaaLists = NyaaModel.ListNyaaModel(data);
+                    return nyaaLists;
+                })
+                .catch((err) => {
+                    console.log(err);
+                    return err;
+                })
+            } else {
+                return h.response(null).code(401)
+            }
+            return h.response(obj).code(200);
         }
     });
 
