@@ -12,6 +12,7 @@
     "@hapi/hapi": "^21.1.0",
     "hapi-lambda": "^1.0.0",
     "nyaapi": "^2.4.4",
+    "nyaapi-sukebei": "^2.4.5",
     "serverless-http": "^3.1.0"
   }
 }

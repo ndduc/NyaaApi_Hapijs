@@ -14,7 +14,6 @@ const init = async () => {
         method: 'GET',
         path: '/',
         handler: (request, h) => {
-
             return 'Nyaa Api with Hapi';
         }
     });
